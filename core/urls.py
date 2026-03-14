@@ -1,4 +1,7 @@
+from .views import calculadora_vna_view
 from django.urls import path
+
+
 from .views import (
     dashboard,
     solicitar_acesso,
@@ -13,4 +16,5 @@ urlpatterns = [
         solicitacao_acesso_sucesso,
         name="solicitacao_acesso_sucesso",
     ),
+    path("calculadora-vna/", calculadora_vna_view, name="calculadora_vna"),
 ]

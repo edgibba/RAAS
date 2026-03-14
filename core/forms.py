@@ -26,3 +26,30 @@ class SolicitacaoAcessoForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
         return email
+
+        
+class CalculadoraVNAForm(forms.Form):
+    indice = forms.ChoiceField(
+        label="Índice",
+        choices=[],
+        required=True,
+    )
+    data_inicio_rentabilidade = forms.DateField(
+        label="Data início da rentabilidade",
+        widget=forms.DateInput(attrs={"type": "date"}),
+        required=True,
+    )
+    data_vna = forms.DateField(
+        label="Data do VNA desejado",
+        widget=forms.DateInput(attrs={"type": "date"}),
+        required=True,
+    )
+    detalhar = forms.BooleanField(
+        label="Exibir memória de cálculo auditável",
+        required=False,
+        initial=True,
+    )
+
+    def __init__(self, *args, indices_choices=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["indice"].choices = indices_choices or []        

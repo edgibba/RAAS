@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Calculadora VNA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 32px;
+            background: #f7f7f7;
+            color: #222;
+        }
+        .card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 10px;
+            max-width: 980px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .full {
+            grid-column: 1 / -1;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #1f4b99;
+            color: white;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .erro {
+            color: #a30000;
+            margin-top: 12px;
+        }
+        .topo a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="topo">
+        <p><a href="/">Voltar ao dashboard</a></p>
+    </div>
+
+    <div class="card">
+        <h1>Calculadora de VNA</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid">
+                <div>
+                    <label for="{{ form.indice.id_for_label }}">{{ form.indice.label }}</label>
+                    {{ form.indice }}
+                </div>
+                <div>
+                    <label for="{{ form.data_inicio_rentabilidade.id_for_label }}">{{ form.data_inicio_rentabilidade.label }}</label>
+                    {{ form.data_inicio_rentabilidade }}
+                </div>
+                <div>
+                    <label for="{{ form.data_vna.id_for_label }}">{{ form.data_vna.label }}</label>
+                    {{ form.data_vna }}
+                </div>
+                <div style="display:flex; align-items:end;">
+                    <div>
+                        {{ form.detalhar }} {{ form.detalhar.label }}
+                    </div>
+                </div>
+                <div class="full">
+                    <button type="submit">Calcular</button>
+                </div>
+            </div>
+        </form>
+
+        {% if erro %}
+            <div class="erro">{{ erro }}</div>
+        {% endif %}
+    </div>
+
+    {% if resultado %}
+        <div class="card">
+            <h2>Resultado</h2>
+            <p><strong>Índice:</strong> {{ resultado.nome_indice }}</p>
+            <p><strong>Data início rentabilidade:</strong> {{ resultado.data_inicio_rentabilidade }}</p>
+            <p><strong>Data VNA:</strong> {{ resultado.data_vna }}</p>
+            <p><strong>VNE:</strong> {{ resultado.vne }}</p>
+            <p><strong>Fator final:</strong> {{ resultado.fator_final }}</p>
+            <p><strong>VNA:</strong> {{ resultado.vna }}</p>
+        </div>
+
+        {% if resultado.etapas %}
+            <div class="card">
+                <h2>Memória de cálculo auditável</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ordem</th>
+                            <th>Ano</th>
+                            <th>Mês</th>
+                            <th>Data divulgação</th>
+                            <th>NI</th>
+                            <th>Real</th>
+                            <th>DUT num.</th>
+                            <th>DUT den.</th>
+                            <th>Fator mensal</th>
+                            <th>Fator acumulado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etapa in resultado.etapas %}
+                            <tr>
+                                <td>{{ etapa.ordem }}</td>
+                                <td>{{ etapa.ano }}</td>
+                                <td>{{ etapa.mes }}</td>
+                                <td>{{ etapa.dt_divulgacao }}</td>
+                                <td>{{ etapa.ni }}</td>
+                                <td>{{ etapa.b_real }}</td>
+                                <td>{{ etapa.dut_numerador }}</td>
+                                <td>{{ etapa.dut_denominador }}</td>
+                                <td>{{ etapa.fator_mensal }}</td>
+                                <td>{{ etapa.fator_acumulado }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
