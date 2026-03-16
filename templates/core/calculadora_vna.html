@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>Calculadora VNA</title>
+    <title>Calculadora de VNA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             background: #fff;
             padding: 24px;
             border-radius: 10px;
-            max-width: 980px;
+            max-width: 1300px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 24px;
         }
@@ -36,6 +36,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            box-sizing: border-box;
         }
         button {
             padding: 10px 18px;
@@ -49,11 +50,13 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 12px;
+            font-size: 13px;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            vertical-align: top;
         }
         th {
             background: #f0f0f0;
@@ -65,6 +68,17 @@
         .topo a {
             text-decoration: none;
         }
+        .resultado-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+        .valor {
+            font-family: Consolas, monospace;
+        }
+        .tabela-scroll {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +88,7 @@
 
     <div class="card">
         <h1>Calculadora de VNA</h1>
+
         <form method="post">
             {% csrf_token %}
             <div class="grid">
@@ -81,19 +96,25 @@
                     <label for="{{ form.indice.id_for_label }}">{{ form.indice.label }}</label>
                     {{ form.indice }}
                 </div>
+
                 <div>
-                    <label for="{{ form.data_inicio_rentabilidade.id_for_label }}">{{ form.data_inicio_rentabilidade.label }}</label>
+                    <label for="{{ form.data_inicio_rentabilidade.id_for_label }}">
+                        {{ form.data_inicio_rentabilidade.label }}
+                    </label>
                     {{ form.data_inicio_rentabilidade }}
                 </div>
+
                 <div>
                     <label for="{{ form.data_vna.id_for_label }}">{{ form.data_vna.label }}</label>
                     {{ form.data_vna }}
                 </div>
+
                 <div style="display:flex; align-items:end;">
                     <div>
                         {{ form.detalhar }} {{ form.detalhar.label }}
                     </div>
                 </div>
+
                 <div class="full">
                     <button type="submit">Calcular</button>
                 </div>
@@ -101,56 +122,85 @@
         </form>
 
         {% if erro %}
-            <div class="erro">{{ erro }}</div>
+            <div class="erro"><strong>Erro:</strong> {{ erro }}</div>
         {% endif %}
     </div>
 
     {% if resultado %}
         <div class="card">
             <h2>Resultado</h2>
-            <p><strong>Índice:</strong> {{ resultado.nome_indice }}</p>
-            <p><strong>Data início rentabilidade:</strong> {{ resultado.data_inicio_rentabilidade }}</p>
-            <p><strong>Data VNA:</strong> {{ resultado.data_vna }}</p>
-            <p><strong>VNE:</strong> {{ resultado.vne }}</p>
-            <p><strong>Fator final:</strong> {{ resultado.fator_final }}</p>
-            <p><strong>VNA:</strong> {{ resultado.vna }}</p>
+
+            <div class="resultado-grid">
+                <div><strong>Índice:</strong></div>
+                <div>{{ resultado.nome_indice }}</div>
+
+                <div><strong>Data início rentabilidade:</strong></div>
+                <div>{{ resultado.data_inicio_rentabilidade|date:"d/m/Y" }}</div>
+
+                <div><strong>Data VNA:</strong></div>
+                <div>{{ resultado.data_vna|date:"d/m/Y" }}</div>
+
+                <div><strong>VNE:</strong></div>
+                <div class="valor">{{ resultado.vne }}</div>
+
+                <div><strong>Fator final:</strong></div>
+                <div class="valor">{{ resultado.fator_final }}</div>
+
+                <div><strong>VNA:</strong></div>
+                <div class="valor"><strong>{{ resultado.vna }}</strong></div>
+            </div>
         </div>
 
         {% if resultado.etapas %}
             <div class="card">
                 <h2>Memória de cálculo auditável</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ordem</th>
-                            <th>Ano</th>
-                            <th>Mês</th>
-                            <th>Data divulgação</th>
-                            <th>NI</th>
-                            <th>Real</th>
-                            <th>DUT num.</th>
-                            <th>DUT den.</th>
-                            <th>Fator mensal</th>
-                            <th>Fator acumulado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for etapa in resultado.etapas %}
+
+                <div class="tabela-scroll">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ etapa.ordem }}</td>
-                                <td>{{ etapa.ano }}</td>
-                                <td>{{ etapa.mes }}</td>
-                                <td>{{ etapa.dt_divulgacao }}</td>
-                                <td>{{ etapa.ni }}</td>
-                                <td>{{ etapa.b_real }}</td>
-                                <td>{{ etapa.dut_numerador }}</td>
-                                <td>{{ etapa.dut_denominador }}</td>
-                                <td>{{ etapa.fator_mensal }}</td>
-                                <td>{{ etapa.fator_acumulado }}</td>
+                                <th>Ordem</th>
+                                <th>Tipo</th>
+                                <th>Data fim período</th>
+                                <th>Ref. NI atual</th>
+                                <th>Ref. NI anterior</th>
+                                <th>Data divulgação</th>
+                                <th>NI atual</th>
+                                <th>NI anterior</th>
+                                <th>Fonte</th>
+                                <th>DUP</th>
+                                <th>DUT</th>
+                                <th>Expoente</th>
+                                <th>Fator mensal</th>
+                                <th>Fator acumulado</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for etapa in resultado.etapas %}
+                                <tr>
+                                    <td>{{ etapa.ordem }}</td>
+                                    <td>{{ etapa.tipo }}</td>
+                                    <td>{{ etapa.data_fim_periodo|date:"d/m/Y" }}</td>
+                                    <td>{{ etapa.ref_ni_atual|date:"m/Y" }}</td>
+                                    <td>{{ etapa.ref_ni_anterior|date:"m/Y" }}</td>
+                                    <td>
+                                        {% if etapa.dt_divulgacao %}
+                                            {{ etapa.dt_divulgacao|date:"d/m/Y" }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="valor">{{ etapa.ni_atual }}</td>
+                                    <td class="valor">{{ etapa.ni_anterior }}</td>
+                                    <td>{{ etapa.fonte }}</td>
+                                    <td>{{ etapa.dup }}</td>
+                                    <td>{{ etapa.dut }}</td>
+                                    <td class="valor">{{ etapa.expoente }}</td>
+                                    <td class="valor">{{ etapa.fator_mensal }}</td>
+                                    <td class="valor">{{ etapa.fator_acumulado }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         {% endif %}
     {% endif %}
