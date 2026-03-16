@@ -11,16 +11,6 @@ class IndiceCadastro:
 
 
 @dataclass(frozen=True)
-class IndiceMensal:
-    id_indice: int
-    ano: int
-    mes: int
-    dt_divulgacao: date
-    ni: Decimal
-    b_real: bool
-
-
-@dataclass(frozen=True)
 class ResultadoVNA:
     id_indice: int
     nome_indice: str
@@ -34,13 +24,17 @@ class ResultadoVNA:
 @dataclass(frozen=True)
 class EtapaAuditoriaVNA:
     ordem: int
-    ano: int
-    mes: int
-    dt_divulgacao: date
-    ni: Decimal
-    b_real: bool
-    dut_numerador: int
-    dut_denominador: int
+    tipo: str
+    data_fim_periodo: date
+    ref_ni_atual: date
+    ref_ni_anterior: date
+    dt_divulgacao: date | None
+    ni_atual: Decimal
+    ni_anterior: Decimal
+    fonte: str
+    dup: int
+    dut: int
+    expoente: Decimal
     fator_mensal: Decimal
     fator_acumulado: Decimal
 
