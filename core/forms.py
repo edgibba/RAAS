@@ -36,12 +36,20 @@ class CalculadoraVNAForm(forms.Form):
     )
     data_inicio_rentabilidade = forms.DateField(
         label="Data início da rentabilidade",
-        widget=forms.DateInput(attrs={"type": "date"}),
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],
+        widget=forms.DateInput(
+            format="%d/%m/%Y",
+            attrs={"placeholder": "dd/mm/aaaa"},
+        ),
         required=True,
     )
     data_vna = forms.DateField(
         label="Data do VNA desejado",
-        widget=forms.DateInput(attrs={"type": "date"}),
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],
+        widget=forms.DateInput(
+            format="%d/%m/%Y",
+            attrs={"placeholder": "dd/mm/aaaa"},
+        ),
         required=True,
     )
     detalhar = forms.BooleanField(

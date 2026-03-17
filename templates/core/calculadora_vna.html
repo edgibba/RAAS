@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load accrual_extras %}
 
 {% block title %}Calculadora VNA | Accrual{% endblock %}
 {% block nav_vna %}active{% endblock %}
@@ -65,7 +66,7 @@
     <div class="vna-hero">
         <div class="vna-hero-left">
             <div class="vna-hero-label">Valor Nominal Atualizado</div>
-            <div class="vna-hero-value"><small>R$</small>{{ resultado.vna }}</div>
+            <div class="vna-hero-value"><small>R$</small>{{ resultado.vna|br_num }}</div>
         </div>
         <div class="vna-hero-right">
             <dl>
@@ -79,10 +80,10 @@
                 <dd>{{ resultado.data_vna|date:"d/m/Y" }}</dd>
 
                 <dt>VNE</dt>
-                <dd>R$ {{ resultado.vne }}</dd>
+                <dd>R$ {{ resultado.vne|br_num }}</dd>
 
                 <dt>Fator final</dt>
-                <dd>{{ resultado.fator_final }}</dd>
+                <dd>{{ resultado.fator_final|br_num }}</dd>
             </dl>
         </div>
     </div>
@@ -129,8 +130,8 @@
                                         {{ etapa.dt_divulgacao|date:"d/m/Y" }}
                                     {% else %}—{% endif %}
                                 </td>
-                                <td class="mono">{{ etapa.ni_atual }}</td>
-                                <td class="mono">{{ etapa.ni_anterior }}</td>
+                                <td class="mono">{{ etapa.ni_atual|br_num }}</td>
+                                <td class="mono">{{ etapa.ni_anterior|br_num }}</td>
                                 <td>
                                     {% if etapa.fonte == "Real divulgado" %}
                                         <span class="tag tag-real">Real</span>
@@ -140,9 +141,9 @@
                                 </td>
                                 <td>{{ etapa.dup }}</td>
                                 <td>{{ etapa.dut }}</td>
-                                <td class="mono">{{ etapa.expoente }}</td>
-                                <td class="mono">{{ etapa.fator_mensal }}</td>
-                                <td class="mono">{{ etapa.fator_acumulado }}</td>
+                                <td class="mono">{{ etapa.expoente|br_num }}</td>
+                                <td class="mono">{{ etapa.fator_mensal|br_num }}</td>
+                                <td class="mono">{{ etapa.fator_acumulado|br_num }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
