@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre | Serviço de Accrual</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/accrual.css' %}">
+</head>
+<body>
+    <div class="page">
+        <div class="topbar">
+            <div class="title-group">
+                <h1>Sobre o sistema</h1>
+                <p>Informações da versão e do último deploy.</p>
+            </div>
+            <div class="user-box">
+                <p>Usuário autenticado: <strong>{{ request.user.username }}</strong></p>
+            </div>
+        </div>
+
+        <div class="intro-card">
+            <h2>Informações do build</h2>
+
+            {% if version %}
+                <div class="resultado-grid" style="max-width: 600px; margin-top: 16px;">
+                    <div><strong>Commit:</strong></div>
+                    <div class="valor">{{ version.commit_short }} <span style="color:#6b7280; font-size:12px;">({{ version.commit }})</span></div>
+
+                    <div><strong>Branch:</strong></div>
+                    <div class="valor">{{ version.branch }}</div>
+
+                    <div><strong>Deploy em:</strong></div>
+                    <div class="valor">{{ version.build_at }}</div>
+                </div>
+            {% else %}
+                <p style="color:#6b7280; margin-top:16px;">
+                    Informações de versão não disponíveis.<br>
+                    <small>O arquivo <code>version.json</code> é gerado automaticamente durante o deploy no Render.</small>
+                </p>
+            {% endif %}
+        </div>
+
+        <p><a href="{% url 'dashboard' %}">← Voltar ao painel</a></p>
+    </div>
+</body>
+</html>

@@ -1,4 +1,7 @@
+import json
 from decimal import Decimal
+from pathlib import Path
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.shortcuts import render, redirect
@@ -32,6 +35,16 @@ def solicitar_acesso(request):
 
 def solicitacao_acesso_sucesso(request):
     return render(request, "core/solicitacao_acesso_sucesso.html")
+
+
+@login_required
+def about(request):
+    version_path = Path(settings.BASE_DIR) / "version.json"
+    try:
+        version = json.loads(version_path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        version = None
+    return render(request, "core/about.html", {"version": version})
     
 @login_required
 def calculadora_vna_view(request):
