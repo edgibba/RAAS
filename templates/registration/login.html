@@ -1,40 +1,69 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Serviço de Accrual</title>
-    {% load static %}
+    <title>Login | Accrual</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/accrual.css' %}">
 </head>
 <body>
-    <div class="login-box">
-        <h1>Acesso ao sistema</h1>
+    <div class="login-layout">
+        <div class="login-panel">
+            <div class="login-panel-logo">
+                <div class="login-panel-logo-icon">A</div>
+                <span class="login-panel-logo-text">Accrual</span>
+            </div>
 
-        <form method="post">
-            {% csrf_token %}
+            <div class="login-panel-body">
+                <h2>Serviço de Cálculo de Accrual</h2>
+                <p>
+                    Plataforma para cálculo do Valor Nominal Atualizado (VNA)
+                    e accrual de debêntures com memória de cálculo auditável.
+                </p>
+            </div>
 
-            {% if form.non_field_errors %}
-                <div class="error-message">
-                    {{ form.non_field_errors }}
+            <div class="login-panel-footer">
+                Acesso restrito a usuários autorizados.
+            </div>
+        </div>
+
+        <div class="login-form-area">
+            <div class="login-form-box">
+                <h1>Entrar na conta</h1>
+                <p class="login-subtitle">Informe suas credenciais para acessar o sistema.</p>
+
+                {% if form.non_field_errors %}
+                    <div class="alert-non-field">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="{{ form.username.id_for_label }}">Usuário</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}">Senha</label>
+                        {{ form.password }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full" style="margin-top: 8px;">
+                        Entrar
+                    </button>
+                </form>
+
+                <div class="login-link">
+                    Não tem acesso?
+                    <a href="{% url 'solicitar_acesso' %}">Solicitar acesso</a>
                 </div>
-            {% endif %}
-
-            <label for="{{ form.username.id_for_label }}">Usuário</label>
-            {{ form.username }}
-
-            <label for="{{ form.password.id_for_label }}">Senha</label>
-            {{ form.password }}
-
-            <button type="submit">Entrar</button>
-			
-            <p style="margin-top: 18px; text-align: center;">
-                <a href="{% url 'solicitar_acesso' %}" class="back-link" style="display:inline;">
-                    Solicitar acesso
-                </a>
-            </p>
-
-        </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

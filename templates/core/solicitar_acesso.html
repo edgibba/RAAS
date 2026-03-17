@@ -1,33 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitar acesso | Serviço de Accrual</title>
-    {% load static %}
+    <title>Solicitar acesso | Accrual</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/accrual.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Solicitar acesso</h1>
-        <p class="description">
-            Preencha os dados abaixo para enviar sua solicitação de acesso ao sistema.
-            O cadastro ficará pendente até análise e liberação pelo administrador.
-        </p>
+    <div class="public-layout">
+        <div class="public-box">
+            <h1>Solicitar acesso</h1>
+            <p class="subtitle">
+                Preencha os dados abaixo. Sua solicitação ficará pendente até
+                análise e liberação pelo administrador.
+            </p>
 
-        <form method="post">
-            {% csrf_token %}
+            <form method="post">
+                {% csrf_token %}
 
-            {% for field in form %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {{ field.errors }}
-            {% endfor %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
 
-            <button type="submit">Enviar solicitação</button>
-        </form>
+                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 8px;">
+                    Enviar solicitação
+                </button>
+            </form>
 
-        <a href="{% url 'login' %}" class="back-link">Voltar para o login</a>
+            <a href="{% url 'login' %}" class="back-link">← Voltar para o login</a>
+        </div>
     </div>
 </body>
 </html>

@@ -1,76 +1,72 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Inicial | Serviço de Accrual</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/accrual.css' %}">
-</head>
-<body>
-    <div class="page">
-        <div class="topbar">
-            <div class="title-group">
-                <h1>Serviço de Cálculo de Accrual</h1>
-                <p>Painel inicial do sistema para consulta de títulos e cálculo de VNA e accrual.</p>
-            </div>
+{% extends "base.html" %}
 
-            <div class="user-box">
-                <p>Usuário autenticado: <strong>{{ request.user.username }}</strong></p>
-                <form method="post" action="{% url 'logout' %}" class="logout-form">
-                    {% csrf_token %}
-                    <button type="submit" class="logout-button">Sair</button>
-                </form>
-            </div>
+{% block title %}Dashboard | Accrual{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Painel inicial</h1>
+    <p>Bem-vindo ao serviço de cálculo de accrual e VNA.</p>
+</div>
+
+<div class="feature-grid">
+    <a href="{% url 'calculadora_vna' %}" class="feature-card">
+        <div class="feature-card-icon feature-card-icon-blue">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="#2563eb">
+                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10A1 1 0 019 9zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z" clip-rule="evenodd"/>
+            </svg>
         </div>
-
-		
-
-        <div class="intro-card">
-            <h2>Visão geral</h2>
-            <p>
-                Esta área será a base operacional do sistema. Na etapa atual, a autenticação já está funcional.
-                Nas próximas fases, esta interface será expandida para permitir a identificação do título,
-                a visualização de seus dados cadastrais e, em seguida, o cálculo do valor nominal atualizado
-                e do accrual na data informada pelo usuário.
-            </p>
-			<p><a href="{% url 'calculadora_vna' %}">Calculadora de VNA</a></p>
-			<p><a href="{% url 'calculadora_vna' %}">Abrir calculadora de VNA</a></p>	
+        <div class="feature-card-title">Calculadora VNA</div>
+        <div class="feature-card-desc">
+            Calcule o Valor Nominal Atualizado com memória de cálculo auditável,
+            suportando índices mensais como IPCA.
         </div>
+        <span class="badge badge-green">Disponível</span>
+    </a>
 
-        <div class="grid">
-            <div class="card">
-                <h3>Consulta de título</h3>
-                <p>
-                    Esta seção será destinada à busca do ativo a partir do código informado pelo usuário,
-                    com retorno dos principais dados cadastrais da debênture.
-                </p>
-                <span class="status">Próxima etapa</span>
-
-                <div class="placeholder-box">
-                    Campos futuros previstos: código do título, identificação do emissor,
-                    data de emissão, data de vencimento, cupom e índice de correção.
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Cálculo de accrual</h3>
-                <p>
-                    Após a seleção do título, esta área será utilizada para informar a data desejada
-                    e apresentar o VNA e o accrual calculados pelo sistema.
-                </p>
-                <span class="status">Etapa posterior</span>
-
-                <div class="placeholder-box">
-                    Campos futuros previstos: data de cálculo, VNA calculado,
-                    juros acumulados e memória resumida do processamento.
-                </div>
-            </div>
+    <div class="feature-card" style="cursor: default;">
+        <div class="feature-card-icon feature-card-icon-amber">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="#d97706">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+            </svg>
         </div>
-
-        <p style="margin-top: 32px; font-size: 13px; color: #9ca3af;">
-            <a href="{% url 'about' %}" style="color: #9ca3af;">Sobre / Versão do sistema</a>
-        </p>
+        <div class="feature-card-title">Consulta de título</div>
+        <div class="feature-card-desc">
+            Busca de ativos pelo código com exibição dos dados cadastrais
+            da debênture — emissor, datas, cupom e índice.
+        </div>
+        <span class="badge badge-amber">Próxima etapa</span>
+        <div class="placeholder-box">Código do título, emissor, data de emissão, vencimento, cupom e índice.</div>
     </div>
-</body>
-</html>
+
+    <div class="feature-card" style="cursor: default;">
+        <div class="feature-card-icon feature-card-icon-gray">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="#94a3b8">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"/>
+            </svg>
+        </div>
+        <div class="feature-card-title">Cálculo de accrual</div>
+        <div class="feature-card-desc">
+            Cálculo do accrual na data informada com exibição do VNA,
+            juros acumulados e memória resumida.
+        </div>
+        <span class="badge badge-gray">Etapa posterior</span>
+        <div class="placeholder-box">Data de cálculo, VNA calculado, juros acumulados e memória resumida.</div>
+    </div>
+
+    <div class="feature-card" style="cursor: default;">
+        <div class="feature-card-icon feature-card-icon-gray">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="#94a3b8">
+                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+        </div>
+        <div class="feature-card-title">Exportação</div>
+        <div class="feature-card-desc">
+            Exportação dos resultados de cálculo para planilha Excel
+            com memória de cálculo completa.
+        </div>
+        <span class="badge badge-gray">Planejado</span>
+    </div>
+</div>
+{% endblock %}
