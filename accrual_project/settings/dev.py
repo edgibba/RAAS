@@ -4,6 +4,9 @@ import dj_database_url
 
 DEBUG = True
 
+RATELIMIT_ENABLE = False
+SILENCED_SYSTEM_CHECKS = ["django_ratelimit.E003", "django_ratelimit.W001"]
+
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 CSRF_TRUSTED_ORIGINS = [
