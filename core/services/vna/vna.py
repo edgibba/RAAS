@@ -56,51 +56,41 @@ def _segundo_mes_anterior(dt: date) -> date:
     return date(ano_2, mes_2, 1)
 
 
-def _aniversario_anterior_ou_igual(conn, dt: date) -> date:
-    """
-    Último aniversário <= dt.
-    """
-    ani_mes = aniversario_ajustado(conn, dt.year, dt.month)
-    if dt < ani_mes:
-        ano_ant, mes_ant = _mes_anterior(dt.year, dt.month)
-        return aniversario_ajustado(conn, ano_ant, mes_ant)
-    return ani_mes
-
-
-def _proximo_aniversario_apos(conn, dt: date) -> date:
+def _proximo_aniversario_apos(conn, dt: date, dia: int = 15) -> date:
     """
     Próximo aniversário após dt, conforme a lógica da planilha.
     """
-    ani_mes = aniversario_ajustado(conn, dt.year, dt.month)
+    ani_mes = aniversario_ajustado(conn, dt.year, dt.month, dia)
     if dt < ani_mes:
         return ani_mes
 
     ano_next, mes_next = (dt.year + 1, 1) if dt.month == 12 else (dt.year, dt.month + 1)
-    return aniversario_ajustado(conn, ano_next, mes_next)
+    return aniversario_ajustado(conn, ano_next, mes_next, dia)
 
 
 def _montar_primeira_linha(
     conn,
     data_inicio_ajustada: date,
     data_vna: date,
+    dia: int = 15,
 ):
-    aniversario_mes_inicio = aniversario_ajustado(conn, data_inicio_ajustada.year, data_inicio_ajustada.month)
+    aniversario_mes_inicio = aniversario_ajustado(conn, data_inicio_ajustada.year, data_inicio_ajustada.month, dia)
     ano_ant, mes_ant = _mes_anterior(data_inicio_ajustada.year, data_inicio_ajustada.month)
-    aniversario_mes_anterior_inicio = aniversario_ajustado(conn, ano_ant, mes_ant)
+    aniversario_mes_anterior_inicio = aniversario_ajustado(conn, ano_ant, mes_ant, dia)
 
     aniversario_anterior_inicio = (
         aniversario_mes_anterior_inicio if data_inicio_ajustada < aniversario_mes_inicio else aniversario_mes_inicio
     )
-    proximo_aniversario_inicio = _proximo_aniversario_apos(conn, data_inicio_ajustada)
+    proximo_aniversario_inicio = _proximo_aniversario_apos(conn, data_inicio_ajustada, dia)
 
-    aniversario_mes_calculo = aniversario_ajustado(conn, data_vna.year, data_vna.month)
+    aniversario_mes_calculo = aniversario_ajustado(conn, data_vna.year, data_vna.month, dia)
     ano_ant_calc, mes_ant_calc = _mes_anterior(data_vna.year, data_vna.month)
-    aniversario_mes_anterior_calculo = aniversario_ajustado(conn, ano_ant_calc, mes_ant_calc)
+    aniversario_mes_anterior_calculo = aniversario_ajustado(conn, ano_ant_calc, mes_ant_calc, dia)
 
     ultimo_aniversario_calculo = (
         aniversario_mes_anterior_calculo if data_vna < aniversario_mes_calculo else aniversario_mes_calculo
     )
-    proximo_aniversario_calculo = _proximo_aniversario_apos(conn, data_vna)
+    proximo_aniversario_calculo = _proximo_aniversario_apos(conn, data_vna, dia)
 
     dup_final = contar_dias_uteis(conn, ultimo_aniversario_calculo, data_vna)
     dut_final = contar_dias_uteis(conn, ultimo_aniversario_calculo, proximo_aniversario_calculo)
@@ -161,30 +151,6 @@ def _montar_primeira_linha(
     }
 
 
-def _montar_datas_fim_periodo(data_vna: date, proximo_aniversario_inicio: date, calculo_ate_primeiro_aniversario: bool):
-    """
-    Replica a coluna 'Data fim do período' da aba Auditoria_Generica.
-    A primeira linha é a própria data de cálculo.
-    As seguintes são os aniversários ajustados retrocedendo mês a mês,
-    até ultrapassar o primeiro aniversário do fluxo.
-    """
-    datas = [data_vna]
-
-    if calculo_ate_primeiro_aniversario:
-        return datas
-
-    anterior = data_vna
-    while True:
-        ref = _primeiro_dia_mes_anterior(anterior)
-        dt = aniversario_ajustado(None, ref.year, ref.month)  # placeholder
-        datas.append(ref)  # substituído abaixo
-        anterior = ref
-        if anterior <= proximo_aniversario_inicio:
-            break
-
-    return datas
-
-
 def calcular_vna(
     conn,
     id_indice,
@@ -192,6 +158,7 @@ def calcular_vna(
     data_vna: date,
     vne: Decimal = Decimal("1000"),
     base_pro_rata: str = "DU",
+    dia_referencia: int = 15,
     detalhar: bool = False,
 ):
     if data_vna < data_inicio_rentabilidade:
@@ -202,23 +169,29 @@ def calcular_vna(
     if base_pro_rata != "DU":
         raise ParametroInvalidoError("Nesta etapa, somente DU está implementado.")
 
+    if dia_referencia not in range(1, 29):
+        raise ParametroInvalidoError("Dia de referência deve ser entre 1 e 28.")
+
     indice = obter_indice(conn, id_indice)
 
     data_inicio_ajustada = proximo_dia_util_ou_mesma_data(conn, data_inicio_rentabilidade)
     validar_existencia_calendario(conn, data_inicio_ajustada, data_vna)
 
-    info = _montar_primeira_linha(conn, data_inicio_ajustada, data_vna)
+    info = _montar_primeira_linha(conn, data_inicio_ajustada, data_vna, dia_referencia)
 
     datas_fim = [data_vna]
 
     if not info["calculo_ate_primeiro_aniversario"]:
-        data_anterior = data_vna
+        data_anterior = info["ultimo_aniversario_calculo"]
+        if data_vna != info["ultimo_aniversario_calculo"]:
+            datas_fim.append(data_anterior)
         while True:
             ano_ant, mes_ant = _mes_anterior(data_anterior.year, data_anterior.month)
-            dt_retro = aniversario_ajustado(conn, ano_ant, mes_ant)
+            dt_retro = aniversario_ajustado(conn, ano_ant, mes_ant, dia_referencia)
 
             if dt_retro <= info["proximo_aniversario_inicio"]:
-                datas_fim.append(info["proximo_aniversario_inicio"])
+                if data_anterior != info["proximo_aniversario_inicio"]:
+                    datas_fim.append(info["proximo_aniversario_inicio"])
                 break
 
             datas_fim.append(dt_retro)
@@ -229,8 +202,12 @@ def calcular_vna(
     ordem = 1
 
     for i, data_fim_periodo in enumerate(datas_fim):
-        ref_ni_atual = _primeiro_dia_mes_anterior(data_fim_periodo)
-        ref_ni_anterior = _segundo_mes_anterior(data_fim_periodo)
+        if i == 0 and info["tipo_primeira"] == "Parcial final":
+            ref_ni_atual = _primeiro_dia_mes_anterior(info["proximo_aniversario_calculo"])
+            ref_ni_anterior = _segundo_mes_anterior(info["proximo_aniversario_calculo"])
+        else:
+            ref_ni_atual = _primeiro_dia_mes_anterior(data_fim_periodo)
+            ref_ni_anterior = _segundo_mes_anterior(data_fim_periodo)
 
         ni_atual_info = obter_ni_mensal_para_data_calculo(
             conn, id_indice, ref_ni_atual.year, ref_ni_atual.month, data_vna

@@ -61,6 +61,7 @@ def calculadora_vna_view(request):
                 id_indice = int(form.cleaned_data["indice"])
                 data_inicio = form.cleaned_data["data_inicio_rentabilidade"]
                 data_vna = form.cleaned_data["data_vna"]
+                dia_ref = form.cleaned_data["dia_referencia"]
                 detalhar = form.cleaned_data["detalhar"]
 
                 resultado = calcular_vna(
@@ -70,6 +71,7 @@ def calculadora_vna_view(request):
                     data_vna=data_vna,
                     vne=Decimal("1000"),
                     base_pro_rata="DU",
+                    dia_referencia=dia_ref,
                     detalhar=detalhar,
                 )
             except Exception as exc:

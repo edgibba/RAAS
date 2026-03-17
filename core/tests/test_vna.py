@@ -126,3 +126,16 @@ class VNATestCase(TestCase):
             detalhar=True,
         )
         self.assertEqual(str(resultado.vna), "1106.73571719")
+
+    def test_vna_dia_referencia_25_futg12(self):
+        """FUTG12 (Futura Energia S.A.): dia_referencia=25; verifica contra ANBIMA 1006,716950."""
+        resultado = calcular_vna(
+            connection,
+            id_indice=5,
+            data_inicio_rentabilidade=date(2026, 2, 6),
+            data_vna=date(2026, 3, 17),
+            vne=Decimal("1000"),
+            dia_referencia=25,
+            detalhar=True,
+        )
+        self.assertEqual(str(resultado.vna), "1006.71695659")

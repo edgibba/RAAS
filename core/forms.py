@@ -52,6 +52,14 @@ class CalculadoraVNAForm(forms.Form):
         ),
         required=True,
     )
+    dia_referencia = forms.IntegerField(
+        label="Dia de referência do índice",
+        initial=15,
+        min_value=1,
+        max_value=28,
+        widget=forms.NumberInput(attrs={"min": 1, "max": 28}),
+        help_text="Dia base dos aniversários mensais (padrão 15; use 25 para debêntures com dia de referência específico).",
+    )
     detalhar = forms.BooleanField(
         label="Exibir memória de cálculo auditável",
         required=False,
