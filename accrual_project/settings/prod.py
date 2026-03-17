@@ -27,3 +27,7 @@ DATABASES = {
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+# Render roda instância única — LocMemCache é suficiente para rate limiting.
+# Migrar para Redis se escalar para múltiplas instâncias.
+SILENCED_SYSTEM_CHECKS = ["django_ratelimit.E003", "django_ratelimit.W001"]
