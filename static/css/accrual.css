@@ -1,0 +1,303 @@
+/* =====================================================
+   Estilos globais — Serviço de Accrual
+   ===================================================== */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    margin: 0;
+    padding: 0;
+    color: #1f2937;
+}
+
+/* ----- Formulários simples (login, solicitar acesso) ----- */
+
+.container {
+    width: 420px;
+    margin: 60px auto;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.login-box {
+    width: 360px;
+    margin: 80px auto;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+p.description {
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.errorlist {
+    color: #b00020;
+    margin: 8px 0 0 0;
+    padding-left: 18px;
+}
+
+.error-message {
+    color: #b00020;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    margin-top: 24px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #1f3c88;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.back-link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: #1f3c88;
+    text-decoration: none;
+}
+
+/* ----- Dashboard ----- */
+
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 48px 24px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d8dde6;
+}
+
+.title-group h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.title-group p {
+    margin: 8px 0 0 0;
+    color: #5b6472;
+    font-size: 15px;
+}
+
+.user-box {
+    text-align: right;
+}
+
+.user-box p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.logout-button {
+    background: #1f3c88;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    width: auto;
+    margin-top: 0;
+}
+
+.intro-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+}
+
+.intro-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.intro-card p {
+    margin: 0;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.card p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    background: #eef2ff;
+    color: #1f3c88;
+}
+
+.placeholder-box {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px dashed #c7cfdb;
+    border-radius: 8px;
+    background: #fafbfc;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* ----- Calculadora VNA ----- */
+
+.card-vna {
+    background: #fff;
+    padding: 24px;
+    border-radius: 10px;
+    max-width: 1300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+}
+
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.btn-calcular {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #1f4b99;
+    color: white;
+    cursor: pointer;
+    width: auto;
+    margin-top: 0;
+    font-size: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: #f0f0f0;
+}
+
+.erro {
+    color: #a30000;
+    margin-top: 12px;
+}
+
+.topo a {
+    text-decoration: none;
+}
+
+.resultado-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+}
+
+.valor {
+    font-family: Consolas, monospace;
+}
+
+.tabela-scroll {
+    overflow-x: auto;
+}
+
+/* ----- Responsivo ----- */
+
+@media (max-width: 800px) {
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .user-box {
+        text-align: left;
+    }
+
+    .grid,
+    .grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .container,
+    .login-box {
+        width: 90%;
+    }
+}

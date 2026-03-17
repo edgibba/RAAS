@@ -52,4 +52,17 @@ class CalculadoraVNAForm(forms.Form):
 
     def __init__(self, *args, indices_choices=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["indice"].choices = indices_choices or []        
+        self.fields["indice"].choices = indices_choices or []
+
+    def clean(self):
+        cleaned_data = super().clean()
+        data_inicio = cleaned_data.get("data_inicio_rentabilidade")
+        data_vna = cleaned_data.get("data_vna")
+
+        if data_inicio and data_vna:
+            if data_vna <= data_inicio:
+                raise forms.ValidationError(
+                    "A data do VNA deve ser posterior à data de início da rentabilidade."
+                )
+
+        return cleaned_data

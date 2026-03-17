@@ -1,13 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
 from django.db import connection
-from django.shortcuts import render
-from .forms import CalculadoraVNAForm
+from django.shortcuts import render, redirect
+from django_ratelimit.decorators import ratelimit
+from .forms import CalculadoraVNAForm, SolicitacaoAcessoForm
 from core.services.vna.indices import listar_indices_mensais
 from core.services.vna.vna import calcular_vna
-from .forms import SolicitacaoAcessoForm
 
 
 @login_required
@@ -15,6 +13,7 @@ def dashboard(request):
     return render(request, "core/dashboard.html")
 
 
+@ratelimit(key="ip", rate="5/h", method="POST", block=True)
 def solicitar_acesso(request):
     if request.method == "POST":
         form = SolicitacaoAcessoForm(request.POST)

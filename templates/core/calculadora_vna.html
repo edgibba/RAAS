@@ -3,95 +3,20 @@
 <head>
     <meta charset="utf-8">
     <title>Calculadora de VNA</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 32px;
-            background: #f7f7f7;
-            color: #222;
-        }
-        .card {
-            background: #fff;
-            padding: 24px;
-            border-radius: 10px;
-            max-width: 1300px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 24px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        .full {
-            grid-column: 1 / -1;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 6px;
-            background: #1f4b99;
-            color: white;
-            cursor: pointer;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 13px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background: #f0f0f0;
-        }
-        .erro {
-            color: #a30000;
-            margin-top: 12px;
-        }
-        .topo a {
-            text-decoration: none;
-        }
-        .resultado-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 24px;
-        }
-        .valor {
-            font-family: Consolas, monospace;
-        }
-        .tabela-scroll {
-            overflow-x: auto;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/accrual.css' %}">
 </head>
 <body>
     <div class="topo">
         <p><a href="/">Voltar ao dashboard</a></p>
     </div>
 
-    <div class="card">
+    <div class="card-vna">
         <h1>Calculadora de VNA</h1>
 
         <form method="post">
             {% csrf_token %}
-            <div class="grid">
+            <div class="grid-form">
                 <div>
                     <label for="{{ form.indice.id_for_label }}">{{ form.indice.label }}</label>
                     {{ form.indice }}
@@ -116,7 +41,7 @@
                 </div>
 
                 <div class="full">
-                    <button type="submit">Calcular</button>
+                    <button type="submit" class="btn-calcular">Calcular</button>
                 </div>
             </div>
         </form>
@@ -127,7 +52,7 @@
     </div>
 
     {% if resultado %}
-        <div class="card">
+        <div class="card-vna">
             <h2>Resultado</h2>
 
             <div class="resultado-grid">
@@ -152,7 +77,7 @@
         </div>
 
         {% if resultado.etapas %}
-            <div class="card">
+            <div class="card-vna">
                 <h2>Memória de cálculo auditável</h2>
 
                 <div class="tabela-scroll">
