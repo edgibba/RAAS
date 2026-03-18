@@ -59,8 +59,8 @@ new TomSelect('#codigo', {
             return `<div>${escape(item.codigo)}</div>`;
         },
     },
-    onItemAdd() {
-        this.input.closest('form').submit();
+    onChange(value) {
+        if (value) this.input.closest('form').submit();
     },
     {% if codigo %}
     items: ['{{ codigo }}'],
