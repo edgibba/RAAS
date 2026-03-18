@@ -6,6 +6,7 @@ from .views import (
     calculadora_vna_view,
     consulta_debenture_view,
     fluxo_debenture_view,
+    autocomplete_debenture,
     about,
 )
 
@@ -19,6 +20,7 @@ urlpatterns = [
     ),
     path("calculadora-vna/", calculadora_vna_view, name="calculadora_vna"),
     path("debentures/", consulta_debenture_view, name="consulta_debenture"),
+    path("debentures/autocomplete/", autocomplete_debenture, name="autocomplete_debenture"),
     path("debentures/<str:codigo>/fluxo/", fluxo_debenture_view, name="fluxo_debenture"),
     path("about/", about, name="about"),
 ]

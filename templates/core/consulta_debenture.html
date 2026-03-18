@@ -4,6 +4,72 @@
 {% block title %}Consulta Debênture | Accrual{% endblock %}
 {% block nav_debentures %}active{% endblock %}
 
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet">
+<style>
+    .ts-wrapper.single .ts-control {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 0.95rem;
+    }
+    .ts-wrapper.single.focus .ts-control {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    }
+    .ts-dropdown {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        font-size: 0.9rem;
+    }
+    .ts-dropdown .option { padding: 8px 12px; }
+    .ts-dropdown .option:hover,
+    .ts-dropdown .active { background: var(--primary); color: #fff; }
+    .option-empresa { font-size: 0.78rem; opacity: 0.7; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+new TomSelect('#codigo', {
+    valueField: 'codigo',
+    labelField: 'codigo',
+    searchField: ['codigo', 'empresa'],
+    placeholder: 'Ex: PETR16',
+    loadThrottle: 200,
+    minChars: 2,
+    load(query, callback) {
+        fetch(`{% url 'autocomplete_debenture' %}?q=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(callback)
+            .catch(() => callback());
+    },
+    render: {
+        option(item, escape) {
+            return `<div>
+                <span>${escape(item.codigo)}</span>
+                <span class="option-empresa"> — ${escape(item.empresa)}</span>
+            </div>`;
+        },
+        item(item, escape) {
+            return `<div>${escape(item.codigo)}</div>`;
+        },
+    },
+    onItemAdd() {
+        this.input.closest('form').submit();
+    },
+    {% if codigo %}
+    items: ['{{ codigo }}'],
+    options: [{ codigo: '{{ codigo }}', empresa: '{{ debenture.empresa|default:"" }}' }],
+    {% endif %}
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
     <h1>Consulta de Debêntures</h1>
@@ -15,18 +81,7 @@
         <div class="form-grid">
             <div class="form-group">
                 <label for="codigo">Código do Ativo</label>
-                <input
-                    type="text"
-                    id="codigo"
-                    name="codigo"
-                    value="{{ codigo }}"
-                    placeholder="Ex: PETR16"
-                    style="text-transform:uppercase;"
-                    autocomplete="off"
-                >
-            </div>
-            <div class="form-group" style="display:flex; align-items:flex-end;">
-                <button type="submit" class="btn btn-primary">Consultar</button>
+                <select id="codigo" name="codigo"></select>
             </div>
         </div>
     </form>

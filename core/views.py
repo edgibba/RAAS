@@ -115,6 +115,24 @@ def fluxo_debenture_view(request, codigo):
 
 
 @login_required
+def autocomplete_debenture(request):
+    from django.http import JsonResponse
+    q = request.GET.get("q", "").strip().upper()
+    if len(q) < 2:
+        return JsonResponse([], safe=False)
+    qs = (
+        DebentureCadastro.objects
+        .filter(codigo_ativo__istartswith=q)
+        .values("codigo_ativo", "empresa")
+        .order_by("codigo_ativo")[:20]
+    )
+    return JsonResponse(
+        [{"codigo": r["codigo_ativo"], "empresa": r["empresa"]} for r in qs],
+        safe=False,
+    )
+
+
+@login_required
 def consulta_debenture_view(request):
     codigo = request.GET.get("codigo", "").strip().upper()
     debenture = None
