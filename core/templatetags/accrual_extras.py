@@ -36,3 +36,17 @@ def br_num(value):
         return result
     except (ValueError, TypeError, AttributeError):
         return value
+
+
+@register.filter
+def fmt_cnpj(value):
+    """
+    Formata CNPJ: 12091809000155 → 12.091.809/0001-55
+    """
+    try:
+        digits = "".join(c for c in str(value) if c.isdigit())
+        if len(digits) != 14:
+            return value
+        return f"{digits[:2]}.{digits[2:5]}.{digits[5:8]}/{digits[8:12]}-{digits[12:]}"
+    except (TypeError, AttributeError):
+        return value

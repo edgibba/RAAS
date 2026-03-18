@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load accrual_extras %}
+
+{% block title %}Consulta Debênture | Accrual{% endblock %}
+{% block nav_debentures %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Consulta de Debêntures</h1>
+    <p>Digite o código do ativo para consultar as características cadastrais (ANBIMA).</p>
+</div>
+
+<div class="card">
+    <form method="get" action="">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="codigo">Código do Ativo</label>
+                <input
+                    type="text"
+                    id="codigo"
+                    name="codigo"
+                    value="{{ codigo }}"
+                    placeholder="Ex: PETR16"
+                    style="text-transform:uppercase;"
+                    autocomplete="off"
+                >
+            </div>
+            <div class="form-group" style="display:flex; align-items:flex-end;">
+                <button type="submit" class="btn btn-primary">Consultar</button>
+            </div>
+        </div>
+    </form>
+
+    {% if erro %}
+        <div class="alert-error" style="margin-top: 20px;">
+            <strong>Não encontrada:</strong> {{ erro }}
+        </div>
+    {% endif %}
+</div>
+
+{% if debenture %}
+
+<div class="vna-hero">
+    <div class="vna-hero-left">
+        <div class="vna-hero-label">Código do Ativo</div>
+        <div class="vna-hero-value" style="font-size:2rem;">{{ debenture.codigo_ativo }}</div>
+    </div>
+    <div class="vna-hero-right">
+        <dl>
+            <dt>Empresa</dt>
+            <dd>{{ debenture.empresa|default:"—" }}</dd>
+            <dt>Situação</dt>
+            <dd>{{ debenture.situacao|default:"—" }}</dd>
+            <dt>ISIN</dt>
+            <dd>{{ debenture.isin|default:"—" }}</dd>
+            <dt>Série / Emissão</dt>
+            <dd>{{ debenture.serie|default:"—" }} / {{ debenture.emissao|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">Identificação</div>
+    <table>
+        <tbody>
+            <tr><th>CNPJ</th><td>{{ debenture.cnpj|fmt_cnpj|default:"—" }}</td></tr>
+            <tr><th>IPO</th><td>{{ debenture.ipo|default:"—" }}</td></tr>
+            <tr><th>Forma</th><td>{{ debenture.forma|default:"—" }}</td></tr>
+            <tr><th>Garantia / Espécie</th><td>{{ debenture.garantia_especie|default:"—" }}</td></tr>
+            <tr><th>Classe</th><td>{{ debenture.classe|default:"—" }}</td></tr>
+            <tr><th>Artigo 14</th><td>{{ debenture.artigo_14|default:"—" }}</td></tr>
+            <tr><th>Artigo 24</th><td>{{ debenture.artigo_24|default:"—" }}</td></tr>
+            <tr><th>Deb. Incent. (Lei 12.431)</th><td>{{ debenture.deb_incentivada|default:"—" }}</td></tr>
+            <tr><th>Escritura Padronizada</th><td>{{ debenture.escritura_padronizada|default:"—" }}</td></tr>
+            <tr><th>Resgate Antecipado</th><td>{{ debenture.resgate_antecipado|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-title">Registro CVM</div>
+    <table>
+        <tbody>
+            <tr><th>Registro CVM da Emissão</th><td>{{ debenture.registro_cvm_emissao|default:"—" }}</td></tr>
+            <tr><th>Data Registro CVM da Emissão</th><td>{{ debenture.dt_registro_cvm_emissao|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Registro CVM do Programa</th><td>{{ debenture.registro_cvm_programa|default:"—" }}</td></tr>
+            <tr><th>Data Registro CVM do Programa</th><td>{{ debenture.dt_registro_cvm_programa|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Ato Societário (1)</th><td>{{ debenture.ato_societario_1|default:"—" }}</td></tr>
+            <tr><th>Data do Ato (1)</th><td>{{ debenture.dt_ato_1|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Ato Societário (2)</th><td>{{ debenture.ato_societario_2|default:"—" }}</td></tr>
+            <tr><th>Data do Ato (2)</th><td>{{ debenture.dt_ato_2|date:"d/m/Y"|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-title">Datas</div>
+    <table>
+        <tbody>
+            <tr><th>Data de Emissão</th><td>{{ debenture.dt_emissao|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Data de Vencimento</th><td>{{ debenture.dt_vencimento|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Motivo de Saída</th><td>{{ debenture.motivo_saida|default:"—" }}</td></tr>
+            <tr><th>Data de Saída / Novo Vencimento</th><td>{{ debenture.dt_saida_novo_vencimento|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Início da Rentabilidade</th><td>{{ debenture.dt_inicio_rentabilidade|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Início da Distribuição</th><td>{{ debenture.dt_inicio_distribuicao|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Próxima Repactuação</th><td>{{ debenture.dt_proxima_repactuacao|date:"d/m/Y"|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-title">Valor Nominal e Quantidades</div>
+    <table>
+        <tbody>
+            <tr><th>Unidade Monetária (Emissão)</th><td>{{ debenture.unidade_monetaria_emissao|default:"—" }}</td></tr>
+            <tr><th>Valor Nominal na Emissão</th><td class="mono">{{ debenture.vn_emissao|default:"—" }}</td></tr>
+            <tr><th>Unidade Monetária (Atual)</th><td>{{ debenture.unidade_monetaria_atual|default:"—" }}</td></tr>
+            <tr><th>Valor Nominal Atual (VNA)</th><td class="mono">{{ debenture.vn_atual|default:"—" }}</td></tr>
+            <tr><th>Data do Último VNA</th><td>{{ debenture.dt_ult_vna|date:"d/m/Y"|default:"—" }}</td></tr>
+            <tr><th>Quantidade Emitida</th><td class="mono">{{ debenture.qtd_emitida|default:"—" }}</td></tr>
+            <tr><th>Quantidade em Mercado</th><td class="mono">{{ debenture.qtd_mercado|default:"—" }}</td></tr>
+            <tr><th>Quantidade em Tesouraria</th><td class="mono">{{ debenture.qtd_tesouraria|default:"—" }}</td></tr>
+            <tr><th>Quantidade Resgatada</th><td class="mono">{{ debenture.qtd_resgatada|default:"—" }}</td></tr>
+            <tr><th>Quantidade Cancelada</th><td class="mono">{{ debenture.qtd_cancelada|default:"—" }}</td></tr>
+            <tr><th>Qtd. Convertida no SND</th><td class="mono">{{ debenture.qtd_convertida_snd|default:"—" }}</td></tr>
+            <tr><th>Qtd. Convertida fora do SND</th><td class="mono">{{ debenture.qtd_convertida_fora_snd|default:"—" }}</td></tr>
+            <tr><th>Qtd. Permutada no SND</th><td class="mono">{{ debenture.qtd_permutada_snd|default:"—" }}</td></tr>
+            <tr><th>Qtd. Permutada fora do SND</th><td class="mono">{{ debenture.qtd_permutada_fora_snd|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-title">Indexador / Rentabilidade</div>
+    <table>
+        <tbody>
+            <tr><th>Índice</th><td>{{ debenture.indice|default:"—" }}</td></tr>
+            <tr><th>Tipo</th><td>{{ debenture.tipo_indice|default:"—" }}</td></tr>
+            <tr><th>Critério de Cálculo</th><td>{{ debenture.criterio_calculo|default:"—" }}</td></tr>
+            <tr><th>Dia de Referência para Índice de Preços</th><td>{{ debenture.dia_ref_indice_precos|default:"—" }}</td></tr>
+            <tr><th>Critério para Índice</th><td>{{ debenture.criterio_indice|default:"—" }}</td></tr>
+            <tr><th>Corrige a Cada</th><td>{{ debenture.corrige_a_cada|default:"—" }}</td></tr>
+            <tr><th>% Multiplicador / Rentabilidade</th><td>{{ debenture.pct_multiplicador|default:"—" }}</td></tr>
+            <tr><th>Limite da TJLP</th><td>{{ debenture.limite_tjlp|default:"—" }}</td></tr>
+            <tr><th>Tipo de Tratamento do Limite TJLP</th><td>{{ debenture.tipo_limite_tjlp|default:"—" }}</td></tr>
+            <tr><th>Juros Critério Antigo do SND</th><td>{{ debenture.juros_criterio_antigo|default:"—" }}</td></tr>
+            <tr><th>Prêmios Critério Antigo do SND</th><td>{{ debenture.premios_criterio_antigo|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-title">Amortização e Juros</div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Componente</th>
+                    <th>Taxa</th>
+                    <th>Prazo</th>
+                    <th>Cada</th>
+                    <th>Unidade</th>
+                    <th>Carência</th>
+                    <th>Critério</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Amortização</td>
+                    <td>{{ debenture.amort_taxa|default:"—" }}</td>
+                    <td>—</td>
+                    <td>{{ debenture.amort_cada|default:"—" }}</td>
+                    <td>{{ debenture.amort_unidade|default:"—" }}</td>
+                    <td>{{ debenture.amort_carencia|default:"—" }}</td>
+                    <td>{{ debenture.amort_criterio|default:"—" }}</td>
+                    <td>{{ debenture.tipo_amortizacao|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <td>Juros</td>
+                    <td>{{ debenture.juros_taxa|default:"—" }}</td>
+                    <td>{{ debenture.juros_prazo|default:"—" }}</td>
+                    <td>{{ debenture.juros_cada|default:"—" }}</td>
+                    <td>{{ debenture.juros_unidade|default:"—" }}</td>
+                    <td>{{ debenture.juros_carencia|default:"—" }}</td>
+                    <td>{{ debenture.juros_criterio|default:"—" }}</td>
+                    <td>{{ debenture.juros_tipo|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <td>Prêmio</td>
+                    <td>{{ debenture.premio_taxa|default:"—" }}</td>
+                    <td>{{ debenture.premio_prazo|default:"—" }}</td>
+                    <td>{{ debenture.premio_cada|default:"—" }}</td>
+                    <td>{{ debenture.premio_unidade|default:"—" }}</td>
+                    <td>{{ debenture.premio_carencia|default:"—" }}</td>
+                    <td>{{ debenture.premio_criterio|default:"—" }}</td>
+                    <td>{{ debenture.premio_tipo|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <td>Participação</td>
+                    <td>{{ debenture.participacao_taxa|default:"—" }}</td>
+                    <td>—</td>
+                    <td>{{ debenture.participacao_cada|default:"—" }}</td>
+                    <td>{{ debenture.participacao_unidade|default:"—" }}</td>
+                    <td>{{ debenture.participacao_carencia|default:"—" }}</td>
+                    <td colspan="2">{{ debenture.participacao_descricao|default:"—" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">Agentes</div>
+    <table>
+        <tbody>
+            <tr><th>Banco Mandatário</th><td>{{ debenture.banco_mandatario|default:"—" }}</td></tr>
+            <tr><th>Agente Fiduciário</th><td>{{ debenture.agente_fiduciario|default:"—" }}</td></tr>
+            <tr><th>Instituição Depositária</th><td>{{ debenture.instituicao_depositaria|default:"—" }}</td></tr>
+            <tr><th>Coordenador Líder</th><td>{{ debenture.coordenador_lider|default:"—" }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+{% endif %}
+{% endblock %}

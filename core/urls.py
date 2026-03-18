@@ -4,6 +4,7 @@ from .views import (
     solicitar_acesso,
     solicitacao_acesso_sucesso,
     calculadora_vna_view,
+    consulta_debenture_view,
     about,
 )
 
@@ -16,5 +17,6 @@ urlpatterns = [
         name="solicitacao_acesso_sucesso",
     ),
     path("calculadora-vna/", calculadora_vna_view, name="calculadora_vna"),
+    path("debentures/", consulta_debenture_view, name="consulta_debenture"),
     path("about/", about, name="about"),
 ]

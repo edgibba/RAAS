@@ -1,0 +1,10 @@
+-- inicaliza o ambiente python do projeto
+.venv\Scripts\activate
+-- entra no modo interativo do python
+python manage.py shell  
+-- coloca o servidor web no ar (local)
+python manage.py runserver
+-- ativar claude
+ claude --resume accrual
+-- carga d oarquivo de debentures
+python manage.py carga_debcad --limpar
