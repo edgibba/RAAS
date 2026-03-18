@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load accrual_extras %}
+
+{% block title %}Fluxo {{ codigo }} | Accrual{% endblock %}
+{% block nav_debentures %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Agenda de Fluxos — {{ codigo }}</h1>
+    {% if debenture %}
+        <p>{{ debenture.empresa }}</p>
+    {% endif %}
+</div>
+
+<div style="margin-bottom: 16px;">
+    <a href="{% url 'consulta_debenture' %}?codigo={{ codigo }}" class="btn btn-primary">
+        ← Voltar ao Cadastro
+    </a>
+</div>
+
+{% if fluxos %}
+    <div class="card">
+        <div class="card-title">Eventos ({{ fluxos.count }} registros)</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data do Evento</th>
+                        <th>Data do Pagamento</th>
+                        <th>Evento</th>
+                        <th>Tipo</th>
+                        <th>Taxa / %</th>
+                        <th>Liquidação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in fluxos %}
+                        <tr>
+                            <td>{{ f.dt_evento|date:"d/m/Y" }}</td>
+                            <td>{{ f.dt_pagamento|date:"d/m/Y"|default:"—" }}</td>
+                            <td>
+                                {% if f.evento == "Juros" %}
+                                    <span class="tag tag-int">{{ f.evento }}</span>
+                                {% elif "Amortiza" in f.evento %}
+                                    <span class="tag tag-parc">{{ f.evento }}</span>
+                                {% elif f.evento == "Vencimento" %}
+                                    <span class="tag tag-real">{{ f.evento }}</span>
+                                {% else %}
+                                    <span class="tag tag-proj">{{ f.evento }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ f.tipo|default:"—" }}</td>
+                            <td class="mono">{{ f.taxa_percentual|default:"—" }}</td>
+                            <td>{{ f.liquidacao|default:"—" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="card">
+        <p>Nenhum fluxo encontrado para <strong>{{ codigo }}</strong>.</p>
+    </div>
+{% endif %}
+
+{% endblock %}

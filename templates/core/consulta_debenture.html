@@ -44,6 +44,9 @@
     <div class="vna-hero-left">
         <div class="vna-hero-label">Código do Ativo</div>
         <div class="vna-hero-value" style="font-size:2rem;">{{ debenture.codigo_ativo }}</div>
+        <a href="{% url 'fluxo_debenture' debenture.codigo_ativo %}" class="btn btn-primary" style="margin-top:12px; display:inline-block;">
+            Ver Fluxo
+        </a>
     </div>
     <div class="vna-hero-right">
         <dl>

@@ -7,7 +7,7 @@ from django.db import connection
 from django.shortcuts import render, redirect
 from django_ratelimit.decorators import ratelimit
 from .forms import CalculadoraVNAForm, SolicitacaoAcessoForm
-from .models import DebentureCadastro
+from .models import DebentureCadastro, DebentureFluxo
 from core.services.vna.indices import listar_indices_mensais
 from core.services.vna.vna import calcular_vna
 
@@ -87,6 +87,29 @@ def calculadora_vna_view(request):
             "form": form,
             "resultado": resultado,
             "erro": erro,
+        },
+    )
+
+
+@login_required
+def fluxo_debenture_view(request, codigo):
+    try:
+        debenture = DebentureCadastro.objects.get(codigo_ativo__iexact=codigo)
+    except DebentureCadastro.DoesNotExist:
+        debenture = None
+
+    fluxos = (
+        DebentureFluxo.objects.filter(cod_deb_id=codigo.upper().strip())
+        .order_by("dt_evento", "evento")
+    )
+
+    return render(
+        request,
+        "core/fluxo_debenture.html",
+        {
+            "debenture": debenture,
+            "codigo": codigo.upper(),
+            "fluxos": fluxos,
         },
     )
 

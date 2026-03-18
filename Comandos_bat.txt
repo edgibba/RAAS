@@ -8,3 +8,5 @@ python manage.py runserver
  claude --resume accrual
 -- carga d oarquivo de debentures
 python manage.py carga_debcad --limpar
+-- carga dos fluxos
+python manage.py carga_debflux --limpar

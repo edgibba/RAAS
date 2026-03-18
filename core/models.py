@@ -118,6 +118,29 @@ class DebentureCadastro(models.Model):
         return f"{self.codigo_ativo} - {self.empresa}"
 
 
+class DebentureFluxo(models.Model):
+    cod_deb = models.ForeignKey(
+        DebentureCadastro,
+        on_delete=models.CASCADE,
+        db_column="cod_deb",
+        related_name="fluxos",
+    )
+    dt_evento = models.DateField()
+    evento = models.CharField(max_length=60)
+    dt_pagamento = models.DateField(null=True, blank=True)
+    tipo = models.CharField(max_length=50, blank=True)
+    taxa_percentual = models.DecimalField(max_digits=18, decimal_places=6, null=True, blank=True)
+    liquidacao = models.CharField(max_length=100, blank=True)
+
+    class Meta:
+        db_table = "DebentureFluxo"
+        unique_together = [("cod_deb", "dt_evento", "evento")]
+        ordering = ["dt_evento", "evento"]
+
+    def __str__(self):
+        return f"{self.cod_deb_id} | {self.dt_evento} | {self.evento}"
+
+
 class SolicitacaoAcesso(models.Model):
     STATUS_CHOICES = [
         ("PENDENTE", "Pendente"),
